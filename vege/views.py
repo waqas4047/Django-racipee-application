@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from vege.models import Recipe
 
@@ -18,6 +18,21 @@ def recipe(request):
             recipe_img=recie_img,
         )
 
-        return HttpResponse("your data was successfully stored")
+        return redirect("display")
 
     return render(request, "recipe.html")
+
+
+def display(request):
+
+    queryset = Recipe.objects.all()
+    context = {"recipes": queryset}
+    return render(request, "display.html", context)
+
+
+def delete_recipe(request, id):
+
+    queryset = Recipe.objects.get(id=id)
+    queryset.delete()
+
+    return redirect("display")
