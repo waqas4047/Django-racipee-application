@@ -10,6 +10,19 @@
 </head>
 
 <body>
+    <div class="container mt-5 mb-5">
+        <form class="col-6 mx-auto">
+            <div class="mb-2 d-flex">
+                <input type="text" name="Search" class="form-control">
+                <button type="submit" class="btn btn-success">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="mb-5">
+        <a href=" /" class="btn btn-success">Add New Recipe</a>
+    </div>
+
+
     <table class="table">
         <thead>
             <tr>
@@ -17,7 +30,8 @@
                 <th scope="col">Recipe Name</th>
                 <th scope="col">Receipe Description</th>
                 <th scope="col">Recipe image</th>
-                <th scope="col">Action</th>
+                <th scope="col">D-Action</th>
+                <th scope="col">U-Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +43,7 @@
                 <td><img src="/media/{{recipe.recipe_img}}"
                         style="height: 100px; width: 70px; height: 70px; border-radius: 50%;"></td>
                 <td><a href="/delete_recipe/{{recipe.id}}" class="btn btn-danger">Delete</a></td>
+                <td><a href="/update_recipe/{{recipe.id}}" class="btn btn-success">Update</a></td>
             </tr>
             {% endfor %}
 
