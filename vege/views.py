@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from vege.models import Recipe
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Create your views here.
 
@@ -62,3 +64,32 @@ def update_recipe(request, id):
 
     context = {"recipe": queryset}
     return render(request, "update_recipe.html", context)
+
+
+def login(request):
+    return render(request, "login.html")
+
+
+def register(request):
+
+    if request.method == "POST":
+        f_name = request.POST.get("first_name")
+        l_name = request.POST.get("last_name")
+        uname = request.POST.get("username")
+        passwd = request.POST.get("password")
+
+        user = User.objects.filter(username=uname)
+        if user.exists():
+            messages.info(request, "This username already exist!")
+            return redirect("/register")
+
+        user = User.objects.create(first_name=f_name, last_name=l_name, username=uname)
+
+        user.set_password(passwd)
+        user.save()
+
+        messages.info(request, "Account created succesfully!")
+
+        return redirect("/register")
+
+    return render(request, "register.html")
