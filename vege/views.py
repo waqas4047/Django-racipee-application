@@ -4,6 +4,7 @@ from django.urls import reverse
 from vege.models import Recipe
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
@@ -66,8 +67,30 @@ def update_recipe(request, id):
     return render(request, "update_recipe.html", context)
 
 
-def login(request):
+def login_page(request):
+    if request.method == "POST":
+        uname = request.POST.get("u_name")
+        passwd = request.POST.get("paswd")
+
+        if not User.objects.filter(username=uname).exists():
+            messages.error(request, "invalid username")
+            return redirect("/")
+
+        user = authenticate(username=uname, password=passwd)
+
+        if user is None:
+            messages.error(request, "invalid credentials")
+            return redirect("/")
+        else:
+            login(request, user)
+            return redirect("/display")
+
     return render(request, "login.html")
+
+
+def logout_page(request):
+    logout(request)
+    return redirect("/")
 
 
 def register(request):
@@ -84,12 +107,10 @@ def register(request):
             return redirect("/register")
 
         user = User.objects.create(first_name=f_name, last_name=l_name, username=uname)
-
         user.set_password(passwd)
         user.save()
 
         messages.info(request, "Account created succesfully!")
-
         return redirect("/register")
 
     return render(request, "register.html")
