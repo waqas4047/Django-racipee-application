@@ -5,10 +5,12 @@ from vege.models import Recipe
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
+@login_required(login_url="/")
 def recipe(request):
     if request.method == "POST":
         data = request.POST
@@ -27,6 +29,10 @@ def recipe(request):
     return render(request, "recipe.html")
 
 
+@login_required(login_url="/")
+# this line is used for authentication when user is not login yet
+# so if we write this display in  browser url dirctly  it will not work the above line will redirect
+# the user into base base which is login page
 def display(request):
     queryset = Recipe.objects.all()
     if request.GET.get("Search"):
@@ -37,6 +43,7 @@ def display(request):
     return render(request, "display.html", context)
 
 
+@login_required(login_url="/")
 def delete_recipe(request, id):
 
     queryset = Recipe.objects.get(id=id)
@@ -45,6 +52,7 @@ def delete_recipe(request, id):
     return redirect("display")
 
 
+@login_required(login_url="/")  # this line is used for authentication
 def update_recipe(request, id):
     queryset = Recipe.objects.get(id=id)
     if request.method == "POST":
